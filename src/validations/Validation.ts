@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { date, z } from "zod"
 
 export const usernameValidation = z.string()
     .min(2, { message: "Username must have at least 2 characters" })
@@ -12,7 +12,7 @@ export const signupValidation = z.object({
 })
 
 export const signinValidation = z.object({
-    email: z.string().email({ message: "Enter a valid email" }),
+    identifier: z.string().min(1,{message : "Username and email should be correct"}),
     password: z.string().min(6, { message: "Password must atleast have 6 Characters" }),
 })
 

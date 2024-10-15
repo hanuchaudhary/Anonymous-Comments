@@ -12,39 +12,28 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({
             success: false,
             message: "Not Authenticated"
-        }, { status: 401 })
+        }, { status: 403 })
     }
     const userId = user._id;
     try {
-        //normal
-
-        // const findUser = await userModel.findById(userId);
-        // const userMessages = findUser.messages;
-
-        //via aggregation pipeline
-        const findUser = await userModel.aggregate([
-            { $match: { _id: userId } },
-            { $unwind: '$messages' },
-            { $sort: { 'messages.createdAt': -1 } },
-            { $group: { _id: '$_id', messages: { $push: '$messages' } } }
-        ]);
-        if (!findUser || findUser.length === 0) {
+        //no
+        const findUser = await userModel.findById(userId);
+        if (!findUser) {
             return NextResponse.json({
                 success: true,
                 message: "User Not Found"
-
+                
             }, { status: 401 })
         }
-
-
+        const userMessages = findUser?.messages;
         return NextResponse.json({
             success: true,
-            messages: findUser[0].messages
+            messages: userMessages
         })
     } catch (error) {
         return NextResponse.json({
             success: true,
             message: "Error fetching user messages"
-        }, { status: 401 })
+        }, { status: 500 })
     }
 }

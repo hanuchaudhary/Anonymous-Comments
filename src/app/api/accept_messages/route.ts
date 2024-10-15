@@ -15,7 +15,6 @@ export async function POST(request: NextRequest) {
         }, { status: 401 })
     }
     const userId = user._id;
-    console.log(userId);
 
     const { acceptingMessages } = await request.json();
 
@@ -54,10 +53,10 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({
             success: false,
             message: "Not Authenticated"
-        }, { status: 401 })
+        }, { status: 403 })
     }
     const userId = user._id;
-    console.log(userId);
+
     try {
         const userExist = await userModel.findById(userId);
         if (!userExist) {
@@ -66,12 +65,12 @@ export async function GET(request: NextRequest) {
                 message: "User not Found"
             }, { status: 404 })
         }
-
+        
         return NextResponse.json({
             success: true,
             isAcceptingMessages: userExist.isAcceptingMessages
 
-        }, { status: 401 })
+        }, { status: 200 })
     } catch (error) {
         return NextResponse.json({
             success: false,
