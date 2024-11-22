@@ -19,10 +19,10 @@ const Navbar = () => {
   const user = session?.user as User
 
   return (
-    <nav className="fixed top-0 rounded-b-xl w-full bg-background/80 backdrop-blur-lg border-b border-border z-50">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          <h1 className="text-xl font-semibold text-primary bg-clip-text">
+    <nav className="fixed top-0 rounded-b-xl w-full bg-background/60 backdrop-blur-lg border-b border-border z-50">
+      <div className="container px-4">
+        <div className="flex items-center w-full justify-between py-5">
+          <h1 className="md:text-xl font-semibold text-primary">
             Anonymous Message
           </h1>
           <div className="flex items-center gap-4">
@@ -49,7 +49,7 @@ const Navbar = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Button onClick={() => signIn()} variant="default">
+              <Button size={"sm"} onClick={() => signIn()} variant="default">
                 Sign In
               </Button>
             )}

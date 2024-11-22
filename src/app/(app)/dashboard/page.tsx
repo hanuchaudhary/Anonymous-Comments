@@ -148,7 +148,7 @@ export default function UserDashboard() {
   }
 
   return (
-    <div className="container pt-20 mx-auto py-8 px-4">
+    <div className="container pt-24 mx-auto py-8 px-4">
       <Card className="mb-8">
         <CardHeader>
           <CardTitle className="text-3xl font-bold">User Dashboard</CardTitle>

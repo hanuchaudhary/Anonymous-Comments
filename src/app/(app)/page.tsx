@@ -36,10 +36,10 @@ const features = [
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col pt-20 dark:bg-black bg-white ">
+    <div className="flex flex-col pt-20 dark:bg-black bg-white w-full">
       <main className="flex-grow flex flex-col items-center justify-center px-4 md:px-24 py-12">
         <motion.section
-          className="text-center mb-16 max-w-4xl mx-auto"
+          className="text-center mb-16"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -111,7 +111,7 @@ export default function Home() {
               {messages.map((message, index) => (
                 <CarouselItem
                   key={index}
-                  className="md:basis-1/2 lg:basis-1/3 pl-4"
+                  className="md:basis-1/2 lg:basis-1/3"
                 >
                   <Card className="bg-secondary border-white/20 backdrop-blur-sm text-primary h-full">
                     <CardHeader>
@@ -121,20 +121,22 @@ export default function Home() {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className=" mb-4">{message.content}</p>
+                      <p className="mb-4">{message.content}</p>
                       <p className="text-xs ">{message.received}</p>
                     </CardContent>
                   </Card>
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
+            <div className="md:block hidden">
+              <CarouselPrevious />
+              <CarouselNext />
+            </div>
           </Carousel>
         </motion.div>
       </main>
 
-      <footer className="w-full rounded-t-xl shadow-md py-8 px-4 md:px-6 bg-primary backdrop-blur-sm">
+      <footer className="w-full rounded-t-xl shadow-md py-8 px-4 md:px-6 bg-neutral-950 dark:bg-neutral-800 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-purple-100/60">
             © 2024 TrueFeedback. All rights reserved.

@@ -5,6 +5,10 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
+import { useRouter } from 'next/navigation'
+import axios, { AxiosError } from 'axios'
+import { Loader2, CheckCircle2, XCircle } from 'lucide-react'
+
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -16,12 +20,15 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/hooks/use-toast'
-import axios, { AxiosError } from 'axios'
-import { Loader2, CheckCircle2, XCircle } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 import { signupValidation } from '@/validations/Validation'
 import { useDebounce } from '@/hooks/useDebounce'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 
 export default function SignUpForm() {
   const [username, setUsername] = useState('')
@@ -86,8 +93,8 @@ export default function SignUpForm() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center  py-12">
-      <Card className="w-full max-w-md">
+    <div className="flex min-h-screen items-center justify-center py-12">
+      <Card className="mx-2 w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-center">
             <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl">
@@ -104,8 +111,8 @@ export default function SignUpForm() {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
-                name="username"
                 control={form.control}
+                name="username"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Username</FormLabel>
@@ -149,8 +156,8 @@ export default function SignUpForm() {
                 )}
               />
               <FormField
-                name="email"
                 control={form.control}
+                name="email"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Email</FormLabel>
@@ -165,8 +172,8 @@ export default function SignUpForm() {
                 )}
               />
               <FormField
-                name="password"
                 control={form.control}
+                name="password"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Password</FormLabel>
@@ -202,3 +209,4 @@ export default function SignUpForm() {
     </div>
   )
 }
+
