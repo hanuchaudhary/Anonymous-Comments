@@ -10,8 +10,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { LogOut, User as UserIcon } from "lucide-react"
+} from "@/components/ui/dropdown-menu";
+import { LogOut, UserIcon } from "lucide-react"
+import { ToggleTheme } from "./ToogleTheme"
 
 const Navbar = () => {
   const { data: session } = useSession()
@@ -21,7 +22,7 @@ const Navbar = () => {
     <nav className="fixed top-0 rounded-b-xl w-full bg-background/80 backdrop-blur-lg border-b border-border z-50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <h1 className="text-xl font-semibold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+          <h1 className="text-xl font-semibold text-primary bg-clip-text">
             Anonymous Message
           </h1>
           <div className="flex items-center gap-4">
@@ -52,6 +53,7 @@ const Navbar = () => {
                 Sign In
               </Button>
             )}
+            <ToggleTheme/>
           </div>
         </div>
       </div>

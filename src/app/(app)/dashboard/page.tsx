@@ -1,114 +1,124 @@
-'use client'
+"use client";
 
-import { useState, useEffect, useCallback } from "react"
-import { useSession } from "next-auth/react"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import axios, { AxiosError } from "axios"
-import { Loader2, RefreshCcw, Copy, Link } from "lucide-react"
-import { useToast } from "@/hooks/use-toast"
-import { acceptMessageValidation } from "@/validations/Validation"
-import { Message } from "@/model/User"
-import MessageCard from "@/components/MessageCard"
-import { Button } from "@/components/ui/button"
-import { Switch } from "@/components/ui/switch"
-import { Input } from "@/components/ui/input"
+import { useState, useEffect, useCallback } from "react";
+import { useSession } from "next-auth/react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import axios, { AxiosError } from "axios";
+import { Loader2, RefreshCcw, Copy, Link } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { acceptMessageValidation } from "@/validations/Validation";
+import { Message } from "@/model/User";
+import MessageCard from "@/components/MessageCard";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Input } from "@/components/ui/input";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { useRouter } from "next/navigation"
+} from "@/components/ui/card";
+import { useRouter } from "next/navigation";
 
 export default function UserDashboard() {
-  const { toast } = useToast()
-  const router = useRouter()
-  const session = useSession()
-  const [messages, setMessages] = useState<Message[]>([])
-  const [isSwitchLoading, setIsSwitchLoading] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const { toast } = useToast();
+  const router = useRouter();
+  const session = useSession();
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [isSwitchLoading, setIsSwitchLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const form = useForm({ resolver: zodResolver(acceptMessageValidation) })
-  const { register, watch, setValue } = form
-  const acceptMessages = watch("acceptMessages")
-
-  const handleDeleteMessages = (messageId: string) => {
-    setMessages(messages.filter((message) => message._id !== messageId))
-  }
+  const form = useForm({
+    resolver: zodResolver(acceptMessageValidation),
+    defaultValues: {
+      acceptMessages: false,
+    },
+  });
+  const { register, watch, setValue } = form;
+  const acceptMessages = watch("acceptMessages");
 
   const fetchAcceptMessages = useCallback(async () => {
-    setIsSwitchLoading(true)
+    setIsSwitchLoading(true);
     try {
-      const response = await axios.get(`/api/accept_messages`)
-      setValue("acceptMessages", response.data.isAcceptingMessages)
+      const response = await axios.get(`/api/accept_messages`);
+      setValue("acceptMessages", response.data.isAcceptingMessages);
     } catch (error) {
-      const axiosError = error as AxiosError
+      const axiosError = error as AxiosError;
       toast({
         title: "Error",
         description: axiosError.message || "Failed to fetch message setting",
         variant: "destructive",
-      })
+      });
     } finally {
-      setIsSwitchLoading(false)
+      setIsSwitchLoading(false);
     }
-  }, [setValue, toast])
+  }, [setValue, toast]);
 
   const fetchMessages = useCallback(async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      const response = await axios.get(`/api/get_messages`)
-      setMessages(response.data.messages)
+      const response = await axios.get(`/api/get_messages`);
+      setMessages(response.data.messages);
     } catch (error) {
-      const axiosError = error as AxiosError
+      const axiosError = error as AxiosError;
       toast({
         title: "Error",
         description: axiosError.message || "Failed to fetch messages",
         variant: "destructive",
-      })
+      });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }, [toast])
+  }, [toast]);
 
   useEffect(() => {
-    if (!session || !session.data?.user) return
-    fetchMessages()
-    fetchAcceptMessages()
-  }, [session, fetchAcceptMessages, fetchMessages])
+    if (!session || !session.data?.user) return;
+    fetchMessages();
+    fetchAcceptMessages();
+  }, [session, fetchAcceptMessages, fetchMessages]);
 
   const handleSwitchChange = async () => {
+    setIsSwitchLoading(true);
     try {
+      const newAcceptMessages = !acceptMessages;
+      console.log(newAcceptMessages);
       const response = await axios.post(`/api/accept_messages`, {
-        acceptMessages: !acceptMessages,
-      })
-      setValue("acceptMessages", !acceptMessages)
+        acceptingMessages: newAcceptMessages,
+      });
+      setValue("acceptMessages", newAcceptMessages);
       toast({
         title: response.data.message,
         variant: "success",
-      })
+      });
     } catch (error) {
-      const axiosError = error as AxiosError
+      const axiosError = error as AxiosError;
       toast({
         title: "Error",
         description: axiosError.message || "Failed to change switch setting",
         variant: "destructive",
-      })
+      });
+    } finally {
+      setIsSwitchLoading(false);
     }
-  }
+  };
 
-  const username = session?.data?.user?.username
-  const profileUrl = `${window.location.protocol}//${window.location.host}/u/${username}`
+  const handleDeleteMessages = (messageId: string) => {
+    setMessages(messages.filter((message) => message._id !== messageId));
+  };
+
+  const username = session?.data?.user?.username;
+  const profileUrl = `${window.location.protocol}//${window.location.host}/u/${username}`;
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(profileUrl)
+    navigator.clipboard.writeText(profileUrl);
     toast({
       title: "URL Copied!",
       description: "Profile URL has been copied to clipboard",
       variant: "success",
-    })
-  }
+    });
+  };
 
   if (!session || !session.data?.user) {
     return (
@@ -116,20 +126,27 @@ export default function UserDashboard() {
         <Card className="w-[350px]">
           <CardHeader>
             <CardTitle>Authentication Required</CardTitle>
-            <CardDescription>Please log in to access your dashboard.</CardDescription>
+            <CardDescription>
+              Please log in to access your dashboard.
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button className="w-full" onClick={() => {
-              router.replace("/signin")
-            }}>Login</Button>
+            <Button
+              className="w-full"
+              onClick={() => {
+                router.replace("/signin");
+              }}
+            >
+              Login
+            </Button>
           </CardContent>
         </Card>
       </div>
-    )
+    );
   }
 
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className="container pt-20 mx-auto py-8 px-4">
       <Card className="mb-8">
         <CardHeader>
           <CardTitle className="text-3xl font-bold">User Dashboard</CardTitle>
@@ -149,7 +166,6 @@ export default function UserDashboard() {
             </div>
             <div className="flex items-center space-x-2">
               <Switch
-                {...register("acceptMessages")}
                 checked={acceptMessages}
                 onCheckedChange={handleSwitchChange}
                 disabled={isSwitchLoading}
@@ -179,9 +195,12 @@ export default function UserDashboard() {
         {messages.length > 0 ? (
           messages.map((message) => (
             <MessageCard
-              key={message._id}
+              key={message._id as string}
               message={message}
-              onDeleteMessage={handleDeleteMessages}
+              onMessageDelete={(messageId: string) =>
+                setMessages(
+                  messages.filter((message) => message._id !== messageId)
+                )}
             />
           ))
         ) : (
@@ -193,5 +212,5 @@ export default function UserDashboard() {
         )}
       </div>
     </div>
-  )
+  );
 }

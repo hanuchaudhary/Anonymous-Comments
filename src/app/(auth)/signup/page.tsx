@@ -86,7 +86,7 @@ export default function SignUpForm() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-gray-900 to-gray-800 px-4 py-12">
+    <div className="flex min-h-screen items-center justify-center  py-12">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-center">

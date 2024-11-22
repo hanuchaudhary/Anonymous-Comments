@@ -1,14 +1,13 @@
-'use client'
+"use client";
 
-import React from "react"
+import React from "react";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,12 +18,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button"
-import { Trash2 } from "lucide-react"
-import { Message } from "@/model/User"
-import axios from "axios"
-import { toast } from "@/hooks/use-toast"
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
+import { Message } from "@/model/User";
+import axios from "axios";
+import { toast } from "@/hooks/use-toast";
 
 type MessageCardProps = {
   message: Message;
@@ -34,24 +33,24 @@ type MessageCardProps = {
 export default function MessageCard({
   message,
   onMessageDelete,
-} : any) {
+}: MessageCardProps) {
   const handleDeleteConfirm = async () => {
     try {
-      await axios.delete(`/api/delete_message/${message._id}`)
+      await axios.delete(`/api/delete_message/${message._id}`);
       toast({
         title: "Deleted!",
         description: "Message deleted successfully.",
         variant: "success",
-      })
+      });
       onMessageDelete(message._id as string);
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Failed",
-        description: "Failed to delete message.",
+        description: error.message,
         variant: "destructive",
-      })
+      });
     }
-  }
+  };
 
   return (
     <Card className="w-full max-w-2xl mx-auto">
@@ -74,7 +73,8 @@ export default function MessageCard({
             <AlertDialogHeader>
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete your message and remove it from our servers.
+                This action cannot be undone. This will permanently delete your
+                message and remove it from our servers.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -90,8 +90,12 @@ export default function MessageCard({
         <p className="text-base text-card-foreground">{message.content}</p>
       </CardContent>
       <CardFooter className="text-sm text-muted-foreground">
-        {new Date(message.createdAt).toLocaleString()}
+        {new Date(message.createdAt).toDateString()}{" "}
+      {new Date(message.createdAt).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit"
+        })}
       </CardFooter>
     </Card>
-  )
+  );
 }

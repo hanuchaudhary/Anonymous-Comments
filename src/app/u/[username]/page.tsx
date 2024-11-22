@@ -4,10 +4,9 @@ import { useState } from "react"
 import { useParams } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 import { Loader2, Send, RefreshCw } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
-import { Message } from "@/model/User"
 import { messageValidation } from "@/validations/Validation"
 import SuggestedMessages from "@/data/suggestedMsg.json"
 import { Button } from "@/components/ui/button"
@@ -56,10 +55,11 @@ export default function AnonymousMessagePage() {
         variant: "success",
       })
       form.reset()
-    } catch (error) {
+    } catch (error: any) {
+      console.log(error);
       toast({
-        title: "Error",
-        description: "Error while sending message",
+        title: "!Failed",
+        description: error.response.data.message || "Error while sending message",
         variant: "destructive",
       })
     } finally {
