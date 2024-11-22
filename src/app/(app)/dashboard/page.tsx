@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios, { AxiosError } from "axios";
-import { Loader2, RefreshCcw, Copy} from "lucide-react";
+import { Loader2, RefreshCcw, Copy } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { acceptMessageValidation } from "@/validations/Validation";
 import { Message } from "@/model/User";
@@ -21,9 +21,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function UserDashboard() {
-  const [profileUrl, setProfileUrl] = useState<string>("");  
+  const [profileUrl, setProfileUrl] = useState<string>("");
   const { toast } = useToast();
   const router = useRouter();
   const session = useSession();
@@ -31,7 +32,7 @@ export default function UserDashboard() {
   const [isSwitchLoading, setIsSwitchLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const username = session.data?.user.username;
-  
+
   const form = useForm({
     resolver: zodResolver(acceptMessageValidation),
     defaultValues: {
@@ -85,7 +86,6 @@ export default function UserDashboard() {
     setIsSwitchLoading(true);
     try {
       const newAcceptMessages = !acceptMessages;
-      console.log(newAcceptMessages);
       const response = await axios.post(`/api/accept_messages`, {
         acceptingMessages: newAcceptMessages,
       });
@@ -106,16 +106,12 @@ export default function UserDashboard() {
     }
   };
 
-
   useEffect(() => {
     if (typeof window !== "undefined" && username) {
       const url = `${window.location.protocol}//${window.location.host}/u/${username}`;
       setProfileUrl(url);
-      console.log(window.location.protocol);
-      console.log(window.location.host);
     }
   }, [username]);
-  
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(profileUrl);
@@ -178,45 +174,48 @@ export default function UserDashboard() {
               />
               <span>Accept Messages: {acceptMessages ? "On" : "Off"}</span>
             </div>
-            <div className="flex justify-between items-center">
-              <h2 className="text-lg font-semibold">Your Messages</h2>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={fetchMessages}
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <RefreshCcw className="h-4 w-4" />
-                )}
-                <span className="ml-2">Refresh</span>
-              </Button>
-            </div>
           </div>
         </CardContent>
       </Card>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {messages.length > 0 ? (
-          messages.map((message) => (
-            <MessageCard
-              key={message._id as string}
-              message={message}
-              onMessageDelete={(messageId: string) =>
-                setMessages(
-                  messages.filter((message) => message._id !== messageId)
-                )}
-            />
-          ))
-        ) : (
-          <Card>
-            <CardContent className="flex items-center justify-center h-32">
-              <p className="text-muted-foreground">No messages to display.</p>
-            </CardContent>
-          </Card>
-        )}
+      <div className="flex justify-between items-center pb-6">
+        <h2 className="text-lg font-semibold">Your Messages</h2>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={fetchMessages}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <RefreshCcw className="h-4 w-4 animate-spin" />
+          ) : (
+            <RefreshCcw className="h-4 w-4" />
+          )}
+          <span className="ml-2">Refresh</span>
+        </Button>
       </div>
+      <ScrollArea className="h-[600px]">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {messages.length > 0 ? (
+            messages.map((message) => (
+              <MessageCard
+                key={message._id as string}
+                message={message}
+                onMessageDelete={(messageId: string) =>
+                  setMessages(
+                    messages.filter((message) => message._id !== messageId)
+                  )
+                }
+              />
+            ))
+          ) : (
+            <Card className="">
+              <CardContent className="flex items-center w-full justify-center h-32">
+                <p className="text-muted-foreground text-center">No messages to display.</p>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      </ScrollArea>
     </div>
   );
 }

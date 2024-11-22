@@ -37,11 +37,6 @@ export default function MessageCard({
   const handleDeleteConfirm = async () => {
     try {
       await axios.delete(`/api/delete_message/${message._id}`);
-      toast({
-        title: "Deleted!",
-        description: "Message deleted successfully.",
-        variant: "success",
-      });
       onMessageDelete(message._id as string);
     } catch (error: any) {
       toast({
@@ -53,10 +48,12 @@ export default function MessageCard({
   };
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
+    <Card className="w-full bg-secondary max-w-2xl mx-auto">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <div>
-          <CardTitle className="text-2xl font-bold">Message</CardTitle>
+          <CardTitle className="md:text-2xl text-xl font-bold">
+            Message
+          </CardTitle>
         </div>
         <AlertDialog>
           <AlertDialogTrigger asChild>
@@ -89,11 +86,11 @@ export default function MessageCard({
       <CardContent>
         <p className="text-base text-card-foreground">{message.content}</p>
       </CardContent>
-      <CardFooter className="text-sm text-muted-foreground">
-        {new Date(message.createdAt).toDateString()}{" "}
-      {new Date(message.createdAt).toLocaleTimeString([], {
+      <CardFooter className="md:text-sm text-xs text-muted-foreground">
+        {new Date(message.createdAt).toDateString()}{" | "}
+        {new Date(message.createdAt).toLocaleTimeString([], {
           hour: "2-digit",
-          minute: "2-digit"
+          minute: "2-digit",
         })}
       </CardFooter>
     </Card>

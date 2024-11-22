@@ -1,15 +1,15 @@
-'use client'
+"use client";
 
-import { useState } from "react"
-import { useParams } from "next/navigation"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import axios from "axios"
-import { Loader2, Send, RefreshCw } from "lucide-react"
-import { useToast } from "@/hooks/use-toast"
-import { messageValidation } from "@/validations/Validation"
-import SuggestedMessages from "@/data/suggestedMsg.json"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import { useParams } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
+import { Loader2, Send, RefreshCw } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { messageValidation } from "@/validations/Validation";
+import SuggestedMessages from "@/data/suggestedMsg.json";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -17,81 +17,91 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { motion, AnimatePresence } from "framer-motion"
-import { z } from "zod"
-
-interface SuggestedMsg {
-  id: string
-  comment: string
-}
+} from "@/components/ui/card";
+import { motion, AnimatePresence } from "framer-motion";
+import { z } from "zod";
 
 export default function AnonymousMessagePage() {
-  const { toast } = useToast()
-  type messageTypes = z.infer<typeof messageValidation> 
-  const [isLoading, setIsLoading] = useState(false)
-  const [randomMessages, setRandomMessages] = useState<SuggestedMsg[]>([])
-  const { username } = useParams()
+  const { toast } = useToast();
+  type messageTypes = z.infer<typeof messageValidation>;
+  const [isLoading, setIsLoading] = useState(false);
+  const [suggestedLoading, setSuggestedLoading] = useState(false);
+  const [suggestedMessages, setSuggestedMessages] = useState<string[]>([
+    "You're doing great, keep it up!",
+    "I really admire your work.",
+    "You're an inspiration to others.",
+  ]);
+  const { username } = useParams();
 
   async function onSubmit(data: messageTypes) {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       const response = await axios.post(`/api/create_message`, {
         username,
         ...data,
-      })
-      console.log(response)
+      });
+      console.log(response);
       toast({
         title: "Success",
         description: "Message sent successfully.",
         variant: "success",
-      })
-      form.reset()
+      });
+      form.setValue("content", "");
+      form.reset();
     } catch (error: any) {
       console.log(error);
       toast({
         title: "!Failed",
-        description: error.response.data.message || "Error while sending message",
+        description:
+          error.response.data.message || "Error while sending message",
         variant: "destructive",
-      })
+      });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
+
+  const generateSuggestedMessages = async () => {
+    try {
+      setSuggestedLoading(true);
+      const response = await axios.post("/api/suggested_messages");
+      const data = response.data.code;
+      const sm = data.split("||");
+      setSuggestedMessages(sm);
+    } catch (error) {
+      console.log("Error: ", error);
+      toast({
+        title: "Error",
+        description: "Error while Suggesting Messages",
+        variant: "destructive",
+      });
+    } finally {
+      setSuggestedLoading(false);
+    }
+  };
 
   const form = useForm<messageTypes>({
     resolver: zodResolver(messageValidation),
   });
 
-  const suggestMessages = () => {
-    const shuffledMessages = [...SuggestedMessages].sort(() => 0.5 - Math.random())
-    const selectedMessages = shuffledMessages
-      .slice(0, 4)
-      .map((message) => ({ ...message, id: message.id.toString() }))
-    setRandomMessages(selectedMessages)
-  }
-  const defaultMessages: SuggestedMsg[] = [
-    { id: "1", comment: "You're doing great, keep it up!" },
-    { id: "2", comment: "I really admire your work." },
-    { id: "3", comment: "You're an inspiration to others." },
-    { id: "4", comment: "Keep shining bright!" },
-  ]
-  const displayedMessages = randomMessages.length > 0 ? randomMessages : defaultMessages
-
   return (
     <div className="container mx-auto py-12 mt-16 lg:mt-28 px-4">
       <Card className="max-w-2xl mx-auto">
         <CardHeader>
-          <CardTitle className="text-3xl font-bold text-center">Send Anonymous Message</CardTitle>
-          <CardDescription className="text-center">to @{username}</CardDescription>
+          <CardTitle className="text-3xl font-bold text-center">
+            Send Anonymous Message
+          </CardTitle>
+          <CardDescription className="text-center">
+            to @{username}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -103,7 +113,10 @@ export default function AnonymousMessagePage() {
                   <FormItem>
                     <FormLabel>Your Message</FormLabel>
                     <FormControl>
-                      <Input placeholder="Type your message here..." {...field} />
+                      <Input
+                        placeholder="Type your message here..."
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -126,35 +139,55 @@ export default function AnonymousMessagePage() {
           </Form>
 
           <div className="mt-8">
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex justify-between md:flex-row flex-col gap-1 items-center mb-4">
               <h2 className="text-lg font-semibold">Suggested Messages</h2>
-              <Button onClick={suggestMessages} variant="outline" size="sm">
-                <RefreshCw className="mr-2 h-4 w-4" />
-                Refresh
+              <Button
+                disabled={suggestedLoading}
+                variant="default"
+                size="sm"
+                className="font-semibold"
+                onClick={generateSuggestedMessages}
+              >
+                {suggestedLoading ? (
+                  <div className="flex animate-pulse">
+                    <motion.img
+                      src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9IiMxYjZkYzUiIGQ9Ik0yNCAxMi4wMjRjLTYuNDM3LjM4OC0xMS41OSA1LjUzOS0xMS45NzcgMTEuOTc2aC0uMDQ3QzExLjU4OCAxNy41NjMgNi40MzYgMTIuNDEyIDAgMTIuMDI0di0uMDQ3QzYuNDM3IDExLjU4OCAxMS41ODggNi40MzcgMTEuOTc2IDBoLjA0N2MuMzg4IDYuNDM3IDUuNTQgMTEuNTg4IDExLjk3NyAxMS45Nzd6Ii8+PC9zdmc+"
+                      alt="loading"
+                    />
+                    <span className="ml-2">Generating Your Suggestions!</span>
+                  </div>
+                ) : (
+                  <div className="flex">
+                    <motion.img
+                      src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9IiMxYjZkYzUiIGQ9Ik0yNCAxMi4wMjRjLTYuNDM3LjM4OC0xMS41OSA1LjUzOS0xMS45NzcgMTEuOTc2aC0uMDQ3QzExLjU4OCAxNy41NjMgNi40MzYgMTIuNDEyIDAgMTIuMDI0di0uMDQ3QzYuNDM3IDExLjU4OCAxMS41ODggNi40MzcgMTEuOTc2IDBoLjA0N2MuMzg4IDYuNDM3IDUuNTQgMTEuNTg4IDExLjk3NyAxMS45Nzd6Ii8+PC9zdmc+"
+                      alt="suggestion"
+                    />
+                    <span className="ml-2">Suggest a Message with AI!</span>
+                  </div>
+                )}
               </Button>
             </div>
             <AnimatePresence mode="wait">
               <motion.div
-                key={displayedMessages.map(m => m.id).join(',')}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3 }}
                 className="grid gap-2"
               >
-                {displayedMessages.map((message, index) => (
+                {suggestedMessages.map((message, index) => (
                   <motion.div
-                    key={message.id}
+                    key={index}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: index * 0.1 }}
                   >
                     <Button
                       variant="secondary"
-                      className="justify-start h-auto py-2 px-4 text-left w-full"
-                      onClick={() => form.setValue('content', message.comment)}
+                      className="justify-start text-wrap h-auto py-2 px-4 text-left w-full"
+                      onClick={() => form.setValue("content", message)}
                     >
-                      {message.comment}
+                      {message}
                     </Button>
                   </motion.div>
                 ))}
@@ -164,5 +197,5 @@ export default function AnonymousMessagePage() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

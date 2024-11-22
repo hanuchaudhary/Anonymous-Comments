@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json({
             success: true,
-            message: "user updated for accepting messages",
+            message: `Accepting Message Status: ${acceptingMessages === true ? "Accepting" : "Not Accepting"}`,
             updatedUser
         }, { status: 200 })
 
