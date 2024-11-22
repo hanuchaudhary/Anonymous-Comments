@@ -1,4 +1,4 @@
-import { date, z } from "zod"
+import { z } from "zod"
 
 export const usernameValidation = z.string()
     .min(2, { message: "Username must have at least 2 characters" })

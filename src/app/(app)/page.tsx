@@ -71,7 +71,7 @@ export default function Home() {
           transition={{ delay: 0.3, duration: 0.6 }}
         >
           {features.map((feature, index) => (
-            <motion.div whileHover={{ scale: 1.05 }}>
+            <motion.div key={index} whileHover={{ scale: 1.05 }}>
               <Card
                 key={index}
                 className="bg-secondary border-white/20 backdrop-blur-sm text-secondary"

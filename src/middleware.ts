@@ -7,10 +7,8 @@ export const config = {
 };
 
 export async function middleware(request: NextRequest) {
-  const token = await getToken({req: request,secret: process.env.NEXT_AUTH_SECRET})
+  const token = await getToken({ req: request, secret: process.env.NEXT_AUTH_SECRET })
   const url = request.nextUrl;
-
-console.log("Token : ",token);
 
   if (
     token &&

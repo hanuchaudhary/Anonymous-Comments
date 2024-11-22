@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios, { AxiosError } from "axios";
-import { Loader2, RefreshCcw, Copy, Link } from "lucide-react";
+import { Loader2, RefreshCcw, Copy} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { acceptMessageValidation } from "@/validations/Validation";
 import { Message } from "@/model/User";
@@ -23,13 +23,15 @@ import {
 import { useRouter } from "next/navigation";
 
 export default function UserDashboard() {
+  const [profileUrl, setProfileUrl] = useState<string>("");  
   const { toast } = useToast();
   const router = useRouter();
   const session = useSession();
   const [messages, setMessages] = useState<Message[]>([]);
   const [isSwitchLoading, setIsSwitchLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  const username = session.data?.user.username;
+  
   const form = useForm({
     resolver: zodResolver(acceptMessageValidation),
     defaultValues: {
@@ -104,19 +106,23 @@ export default function UserDashboard() {
     }
   };
 
-  const handleDeleteMessages = (messageId: string) => {
-    setMessages(messages.filter((message) => message._id !== messageId));
-  };
 
-  const username = session?.data?.user?.username;
-  const profileUrl = `${window.location.protocol}//${window.location.host}/u/${username}`;
+  useEffect(() => {
+    if (typeof window !== "undefined" && username) {
+      const url = `${window.location.protocol}//${window.location.host}/u/${username}`;
+      setProfileUrl(url);
+      console.log(window.location.protocol);
+      console.log(window.location.host);
+    }
+  }, [username]);
+  
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(profileUrl);
     toast({
       title: "URL Copied!",
       description: "Profile URL has been copied to clipboard",
-      variant: "success",
+      variant: "default",
     });
   };
 
