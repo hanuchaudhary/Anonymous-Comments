@@ -151,7 +151,7 @@ export default function UserDashboard() {
     <div className="container pt-24 mx-auto py-8 px-4">
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle className="text-3xl font-bold">User Dashboard</CardTitle>
+          <CardTitle className="text-3xl text-black font-bold">User Dashboard</CardTitle>
           <CardDescription>Manage your messages and settings</CardDescription>
         </CardHeader>
         <CardContent>
@@ -159,7 +159,10 @@ export default function UserDashboard() {
             <div>
               <h2 className="text-lg font-semibold mb-2">Your Unique Link</h2>
               <div className="flex items-center space-x-2">
+                <div className="w-full">
+
                 <Input value={profileUrl} readOnly className="flex-grow" />
+                </div>
                 <Button onClick={copyToClipboard} variant="outline">
                   <Copy className="h-4 w-4 mr-2" />
                   Copy

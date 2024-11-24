@@ -1,13 +1,7 @@
 "use client";
 
 import React from "react";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,6 +18,7 @@ import { Trash2 } from "lucide-react";
 import { Message } from "@/model/User";
 import axios from "axios";
 import { toast } from "@/hooks/use-toast";
+import MessageCardTopBar from "./MessageCardTopBar";
 
 type MessageCardProps = {
   message: Message;
@@ -38,60 +33,82 @@ export default function MessageCard({
     try {
       await axios.delete(`/api/delete_message/${message._id}`);
       onMessageDelete(message._id as string);
+      toast({
+        title: "Message deleted",
+        description: "Your message has been successfully deleted.",
+        variant: "default",
+      });
     } catch (error: any) {
       toast({
-        title: "Failed",
-        description: error.message,
+        title: "Deletion failed",
+        description:
+          "An error occurred while deleting the message. Please try again.",
         variant: "destructive",
       });
     }
   };
 
+  const formatDate = (dateString: string | number | Date) => {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      return "Invalid Date";
+    }
+    return new Intl.DateTimeFormat("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    }).format(date);
+  };
+
+  const formattedDate = formatDate(message.createdAt);
+
   return (
-    <Card className="w-full bg-secondary max-w-2xl mx-auto">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <div>
-          <CardTitle className="md:text-2xl text-xl font-bold">
-            Message
-          </CardTitle>
-        </div>
+    <Card className="w-full max-w-2xl mx-auto">
+      <MessageCardTopBar className="flex items-center justify-center">
+        <time
+          dateTime={new Date(message.createdAt).toISOString()}
+          className="text-sm text-black"
+        >
+          {formattedDate}
+        </time>
+      </MessageCardTopBar>
+      <CardContent className="pt-6">
+        <p className="text-base text-card-foreground whitespace-pre-wrap">
+          {message.content}
+        </p>
+      </CardContent>
+      <CardFooter className="justify-end">
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button
-              size="icon"
-              variant="ghost"
-              className="h-8 w-8 text-muted-foreground hover:text-destructive"
-            >
-              <Trash2 className="h-4 w-4" />
+            <Button size="sm" variant="destructive">
+              <Trash2 className="h-4 w-4 mr-2" />
+              Delete
               <span className="sr-only">Delete message</span>
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete your
-                message and remove it from our servers.
+            <div>
+              <MessageCardTopBar>Delete this message?</MessageCardTopBar>
+              <AlertDialogDescription className="p-6">
+                This action cannot be undone. The message will be permanently
+                removed from our servers.
               </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
+            </div>
+            <AlertDialogFooter className="p-6">
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDeleteConfirm}>
+              <AlertDialogAction
+                onClick={handleDeleteConfirm}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
                 Delete
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-      </CardHeader>
-      <CardContent>
-        <p className="text-base text-card-foreground">{message.content}</p>
-      </CardContent>
-      <CardFooter className="md:text-sm text-xs text-muted-foreground">
-        {new Date(message.createdAt).toDateString()}{" | "}
-        {new Date(message.createdAt).toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        })}
       </CardFooter>
     </Card>
   );

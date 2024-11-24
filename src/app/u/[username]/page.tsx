@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
 import { z } from "zod";
+import MessageCardTopBar from "@/components/MessageCardTopBar";
 
 export default function AnonymousMessagePage() {
   const { toast } = useToast();
@@ -93,16 +94,16 @@ export default function AnonymousMessagePage() {
   });
 
   return (
-    <div className="container mx-auto py-12 mt-16 lg:mt-28 px-4">
-      <Card className="max-w-2xl mx-auto">
-        <CardHeader>
-          <CardTitle className="text-3xl font-bold text-center">
-            Send Anonymous Message
-          </CardTitle>
-          <CardDescription className="text-center">
-            to @{username}
-          </CardDescription>
-        </CardHeader>
+    <div className="container max-w-2xl mx-auto py-12 mt-16 lg:mt-28 px-4">
+      <Card>
+        <div>
+          <MessageCardTopBar className="flex items-center justify-center">
+            <div className="flex items-center justify-center gap-1">
+              <p className="w-full">Send Anonymous Message to</p>
+              <span className="text-sm text-neutral-700">@{username}</span>
+            </div>
+          </MessageCardTopBar>
+        </div>
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -122,7 +123,12 @@ export default function AnonymousMessagePage() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button
+                type="submit"
+                variant={"success"}
+                className="w-full"
+                disabled={isLoading}
+              >
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -177,6 +183,7 @@ export default function AnonymousMessagePage() {
               >
                 {suggestedMessages.map((message, index) => (
                   <motion.div
+                    className="w-full"
                     key={index}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}

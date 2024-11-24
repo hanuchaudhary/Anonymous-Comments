@@ -1,15 +1,15 @@
-'use client'
+"use client";
 
-import { zodResolver } from '@hookform/resolvers/zod'
-import Link from 'next/link'
-import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import * as z from 'zod'
-import { useRouter } from 'next/navigation'
-import axios, { AxiosError } from 'axios'
-import { Loader2, CheckCircle2, XCircle } from 'lucide-react'
+import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { useRouter } from "next/navigation";
+import axios, { AxiosError } from "axios";
+import { Loader2, CheckCircle2, XCircle } from "lucide-react";
 
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -17,93 +17,93 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { useToast } from '@/hooks/use-toast'
-import { signupValidation } from '@/validations/Validation'
-import { useDebounce } from '@/hooks/useDebounce'
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
+import { signupValidation } from "@/validations/Validation";
+import { useDebounce } from "@/hooks/useDebounce";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
+} from "@/components/ui/card";
 
 export default function SignUpForm() {
-  const [username, setUsername] = useState('')
-  const [usernameMessage, setUsernameMessage] = useState('')
-  const [isCheckingUsername, setIsCheckingUsername] = useState(false)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const debouncedUsername = useDebounce(username, 300)
+  const [username, setUsername] = useState("");
+  const [usernameMessage, setUsernameMessage] = useState("");
+  const [isCheckingUsername, setIsCheckingUsername] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const debouncedUsername = useDebounce(username, 300);
 
-  const router = useRouter()
-  const { toast } = useToast()
+  const router = useRouter();
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof signupValidation>>({
     resolver: zodResolver(signupValidation),
     defaultValues: {
-      username: '',
-      email: '',
-      password: '',
+      username: "",
+      email: "",
+      password: "",
     },
-  })
+  });
 
   useEffect(() => {
     const checkUsernameUnique = async () => {
       if (debouncedUsername) {
-        setIsCheckingUsername(true)
-        setUsernameMessage('')
+        setIsCheckingUsername(true);
+        setUsernameMessage("");
         try {
-          const response = await axios.get(`/api/username_verify?username=${debouncedUsername}`)
-          setUsernameMessage(response.data.message)
+          const response = await axios.get(
+            `/api/username_verify?username=${debouncedUsername}`
+          );
+          setUsernameMessage(response.data.message);
         } catch (error) {
-          const axiosError = error as AxiosError<any>
-          setUsernameMessage(axiosError.response?.data.message ?? 'Error checking username')
+          const axiosError = error as AxiosError<any>;
+          setUsernameMessage(
+            axiosError.response?.data.message ?? "Error checking username"
+          );
         } finally {
-          setIsCheckingUsername(false)
+          setIsCheckingUsername(false);
         }
       }
-    }
-    checkUsernameUnique()
-  }, [debouncedUsername])
+    };
+    checkUsernameUnique();
+  }, [debouncedUsername]);
 
   const onSubmit = async (data: z.infer<typeof signupValidation>) => {
-    setIsSubmitting(true)
+    setIsSubmitting(true);
     try {
-      const response = await axios.post('/api/signup', data)
+      const response = await axios.post("/api/signup", data);
       toast({
-        title: 'Success',
+        title: "Success",
         description: response.data.message,
-        variant: 'default',
-      })
-      router.replace(`/verify/${username}`)
+        variant: "default",
+      });
+      router.replace(`/verify/${username}`);
     } catch (error) {
-      console.error('Error during sign-up:', error)
-      const axiosError = error as AxiosError<any>
-      const errorMessage = axiosError.response?.data.message ?? 'There was a problem with your sign-up. Please try again.'
+      console.error("Error during sign-up:", error);
+      const axiosError = error as AxiosError<any>;
+      const errorMessage =
+        axiosError.response?.data.message ??
+        "There was a problem with your sign-up. Please try again.";
       toast({
-        title: 'Sign Up Failed',
+        title: "Sign Up Failed",
         description: errorMessage,
-        variant: 'destructive',
-      })
+        variant: "destructive",
+      });
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
-    <div className="flex min-h-screen items-center justify-center py-12">
-      <Card className="mx-2 w-full max-w-md">
+    <div className="flex min-h-screen w-96 items-center justify-center py-12">
+      <Card>
         <CardHeader>
-          <CardTitle className="text-center">
-            <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl">
-              <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                Unveil Your Voice
-              </span>
-            </h1>
-          </CardTitle>
-          <p className="text-center text-sm text-muted-foreground">
+          <CardTitle className="">Signup</CardTitle>
+          <p className="text-sm text-muted-foreground">
             Join True Feedback for anonymous insights
           </p>
         </CardHeader>
@@ -121,17 +121,18 @@ export default function SignUpForm() {
                         <Input
                           {...field}
                           onChange={(e) => {
-                            field.onChange(e)
-                            setUsername(e.target.value)
+                            field.onChange(e);
+                            setUsername(e.target.value);
                           }}
+                          placeholder="kushchaudharyog"
                           className="pr-10"
                         />
                         {isCheckingUsername && (
-                          <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted-foreground" />
+                          <Loader2 className="absolute z-20 right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted-foreground" />
                         )}
                         {!isCheckingUsername && usernameMessage && (
                           <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                            {usernameMessage === 'Username is available' ? (
+                            {usernameMessage === "Username is available" ? (
                               <CheckCircle2 className="h-4 w-4 text-green-500" />
                             ) : (
                               <XCircle className="h-4 w-4 text-destructive" />
@@ -143,9 +144,9 @@ export default function SignUpForm() {
                     {!isCheckingUsername && usernameMessage && (
                       <p
                         className={`text-xs ${
-                          usernameMessage === 'Username is available'
-                            ? 'text-green-500'
-                            : 'text-destructive'
+                          usernameMessage === "Username is available"
+                            ? "text-green-500"
+                            : "text-destructive"
                         }`}
                       >
                         {usernameMessage}
@@ -162,7 +163,7 @@ export default function SignUpForm() {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input {...field} type="email" />
+                      <Input {...field} placeholder="kushchaudharyog@gmail.com" type="email" />
                     </FormControl>
                     <p className="text-xs text-muted-foreground">
                       We'll send you a verification code
@@ -178,7 +179,7 @@ export default function SignUpForm() {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input {...field} type="password" />
+                      <Input {...field} placeholder="******" type="password" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -191,7 +192,7 @@ export default function SignUpForm() {
                     Please wait
                   </>
                 ) : (
-                  'Sign Up'
+                  "Sign Up"
                 )}
               </Button>
             </form>
@@ -199,14 +200,16 @@ export default function SignUpForm() {
         </CardContent>
         <CardFooter>
           <p className="mx-auto text-sm text-muted-foreground">
-            Already a member?{' '}
-            <Link href="/signin" className="font-medium text-primary hover:underline">
+            Already a member?{" "}
+            <Link
+              href="/signin"
+              className="font-medium text-primary hover:underline"
+            >
               Sign in
             </Link>
           </p>
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }
-
