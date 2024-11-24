@@ -1,7 +1,7 @@
-"use client";
+'use client'
 
-import React from "react";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import React from "react"
+import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,18 +12,18 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
-import { Message } from "@/model/User";
-import axios from "axios";
-import { toast } from "@/hooks/use-toast";
-import MessageCardTopBar from "./MessageCardTopBar";
+} from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
+import { Trash2 } from 'lucide-react'
+import { Message } from "@/model/User"
+import axios from "axios"
+import { toast } from "@/hooks/use-toast"
+import MessageCardTopBar from "./MessageCardTopBar"
 
 type MessageCardProps = {
-  message: Message;
-  onMessageDelete: (messageId: string) => void;
-};
+  message: Message
+  onMessageDelete: (messageId: string) => void
+}
 
 export default function MessageCard({
   message,
@@ -31,40 +31,39 @@ export default function MessageCard({
 }: MessageCardProps) {
   const handleDeleteConfirm = async () => {
     try {
-      await axios.delete(`/api/delete_message/${message._id}`);
-      onMessageDelete(message._id as string);
+      await axios.delete(`/api/delete_message/${message._id}`)
+      onMessageDelete(message._id as string)
       toast({
         title: "Message deleted",
         description: "Your message has been successfully deleted.",
         variant: "default",
-      });
+      })
     } catch (error: any) {
       toast({
         title: "Deletion failed",
         description:
           "An error occurred while deleting the message. Please try again.",
         variant: "destructive",
-      });
+      })
     }
-  };
+  }
 
   const formatDate = (dateString: string | number | Date) => {
-    const date = new Date(dateString);
+    const date = new Date(dateString)
     if (isNaN(date.getTime())) {
-      return "Invalid Date";
+      return "Invalid Date"
     }
     return new Intl.DateTimeFormat("en-US", {
-      weekday: "long",
       year: "numeric",
       month: "long",
       day: "numeric",
       hour: "numeric",
       minute: "numeric",
       hour12: true,
-    }).format(date);
-  };
+    }).format(date)
+  }
 
-  const formattedDate = formatDate(message.createdAt);
+  const formattedDate = formatDate(message.createdAt)
 
   return (
     <Card className="w-full max-w-2xl mx-auto">
@@ -76,12 +75,12 @@ export default function MessageCard({
           {formattedDate}
         </time>
       </MessageCardTopBar>
-      <CardContent className="pt-6">
-        <p className="text-base text-card-foreground whitespace-pre-wrap">
+      <CardContent className="pt-6 px-6 min-h-[40px]">
+        <p className="text-black whitespace-pre-wrap break-words">
           {message.content}
         </p>
       </CardContent>
-      <CardFooter className="justify-end">
+      <CardFooter className="justify-end px-6 py-4">
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button size="sm" variant="destructive">
@@ -90,15 +89,13 @@ export default function MessageCard({
               <span className="sr-only">Delete message</span>
             </Button>
           </AlertDialogTrigger>
-          <AlertDialogContent>
-            <div>
-              <MessageCardTopBar>Delete this message?</MessageCardTopBar>
-              <AlertDialogDescription className="p-6">
-                This action cannot be undone. The message will be permanently
-                removed from our servers.
-              </AlertDialogDescription>
-            </div>
-            <AlertDialogFooter className="p-6">
+          <AlertDialogContent className="p-0">
+            <MessageCardTopBar className="flex items-center justify-center">Delete this message?</MessageCardTopBar>
+            <AlertDialogDescription className="px-6">
+              This action cannot be undone. The message will be permanently
+              removed from our servers.
+            </AlertDialogDescription>
+            <AlertDialogFooter className="px-6 py-4">
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleDeleteConfirm}
@@ -111,5 +108,6 @@ export default function MessageCard({
         </AlertDialog>
       </CardFooter>
     </Card>
-  );
+  )
 }
+

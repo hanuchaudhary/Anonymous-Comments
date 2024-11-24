@@ -148,7 +148,7 @@ export default function UserDashboard() {
   }
 
   return (
-    <div className="container pt-24 mx-auto py-8 px-4">
+    <div className="container max-w-3xl pt-24 mx-auto py-8 px-2">
       <Card className="mb-8">
         <CardHeader>
           <CardTitle className="text-3xl text-black font-bold">User Dashboard</CardTitle>
@@ -157,7 +157,7 @@ export default function UserDashboard() {
         <CardContent>
           <div className="space-y-6">
             <div>
-              <h2 className="text-lg font-semibold mb-2">Your Unique Link</h2>
+              <h2 className="text-lg font-semibold text-black mb-2">Your Unique Link</h2>
               <div className="flex items-center space-x-2">
                 <div className="w-full">
 
@@ -175,13 +175,13 @@ export default function UserDashboard() {
                 onCheckedChange={handleSwitchChange}
                 disabled={isSwitchLoading}
               />
-              <span>Accept Messages: {acceptMessages ? "On" : "Off"}</span>
+              <span className="text-black">Accept Messages: {acceptMessages ? "On" : "Off"}</span>
             </div>
           </div>
         </CardContent>
       </Card>
       <div className="flex justify-between items-center pb-6">
-        <h2 className="text-lg font-semibold">Your Messages</h2>
+        <h2 className="text-lg font-semibold text-black">Your Messages</h2>
         <Button
           variant="outline"
           size="sm"
@@ -196,7 +196,7 @@ export default function UserDashboard() {
           <span className="ml-2">Refresh</span>
         </Button>
       </div>
-      <ScrollArea className="h-[600px]">
+      <ScrollArea className="h-[550px]">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {messages.length > 0 ? (
             messages.map((message) => (

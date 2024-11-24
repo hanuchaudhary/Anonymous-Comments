@@ -94,11 +94,11 @@ export default function AnonymousMessagePage() {
   });
 
   return (
-    <div className="container max-w-2xl mx-auto py-12 mt-16 lg:mt-28 px-4">
+    <div className="container min-h-screen max-w-2xl mx-auto md:py-40 py-20 px-2">
       <Card>
         <div>
           <MessageCardTopBar className="flex items-center justify-center">
-            <div className="flex items-center justify-center gap-1">
+            <div className="md:flex items-center justify-center gap-1">
               <p className="w-full">Send Anonymous Message to</p>
               <span className="text-sm text-neutral-700">@{username}</span>
             </div>
@@ -112,7 +112,9 @@ export default function AnonymousMessagePage() {
                 name="content"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Your Message</FormLabel>
+                    <FormLabel className="font-semibold">
+                      Your Message
+                    </FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Type your message here..."
@@ -146,7 +148,10 @@ export default function AnonymousMessagePage() {
 
           <div className="mt-8">
             <div className="flex justify-between md:flex-row flex-col gap-1 items-center mb-4">
-              <h2 className="text-lg font-semibold">Suggested Messages</h2>
+              <h2 className="text-lg text-black font-semibold">
+                Suggested Messages
+              </h2>
+
               <Button
                 disabled={suggestedLoading}
                 variant="default"
@@ -179,7 +184,7 @@ export default function AnonymousMessagePage() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3 }}
-                className="grid gap-2"
+                className="grid gap-2 w-full"
               >
                 {suggestedMessages.map((message, index) => (
                   <motion.div

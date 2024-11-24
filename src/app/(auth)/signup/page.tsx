@@ -99,117 +99,137 @@ export default function SignUpForm() {
   };
 
   return (
-    <div className="flex min-h-screen w-96 items-center justify-center py-12">
-      <Card>
-        <CardHeader>
-          <CardTitle className="">Signup</CardTitle>
-          <p className="text-sm text-muted-foreground">
-            Join True Feedback for anonymous insights
-          </p>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Username</FormLabel>
-                    <FormControl>
-                      <div className="relative">
+    <div className="flex min-h-screen relative items-center justify-center px-4 py-12">
+      <div className="relative w-96 ">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-black text-xl">Register Account</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Join @nonymous Messages for anonymous insights
+            </p>
+          </CardHeader>
+          <CardContent>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-4"
+              >
+                <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-black font-semibold">
+                        Username
+                      </FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Input
+                            {...field}
+                            onChange={(e) => {
+                              field.onChange(e);
+                              setUsername(e.target.value);
+                            }}
+                            placeholder="kushchaudharyog"
+                            className="pr-10"
+                          />
+                          {isCheckingUsername && (
+                            <Loader2 className="absolute z-20 right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted-foreground" />
+                          )}
+                          {!isCheckingUsername && usernameMessage && (
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                              {usernameMessage === "Username is available" ? (
+                                <CheckCircle2 className="h-4 w-4 text-green-500" />
+                              ) : (
+                                <XCircle className="h-4 w-4 text-destructive" />
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </FormControl>
+                      {!isCheckingUsername && usernameMessage && (
+                        <p
+                          className={`text-xs ${
+                            usernameMessage === "Username is available"
+                              ? "text-green-500"
+                              : "text-destructive"
+                          }`}
+                        >
+                          {usernameMessage}
+                        </p>
+                      )}
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-black font-semibold">
+                        Email
+                      </FormLabel>
+                      <FormControl>
                         <Input
                           {...field}
-                          onChange={(e) => {
-                            field.onChange(e);
-                            setUsername(e.target.value);
-                          }}
-                          placeholder="kushchaudharyog"
-                          className="pr-10"
+                          placeholder="kushchaudharyog@gmail.com"
+                          type="email"
                         />
-                        {isCheckingUsername && (
-                          <Loader2 className="absolute z-20 right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted-foreground" />
-                        )}
-                        {!isCheckingUsername && usernameMessage && (
-                          <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                            {usernameMessage === "Username is available" ? (
-                              <CheckCircle2 className="h-4 w-4 text-green-500" />
-                            ) : (
-                              <XCircle className="h-4 w-4 text-destructive" />
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </FormControl>
-                    {!isCheckingUsername && usernameMessage && (
-                      <p
-                        className={`text-xs ${
-                          usernameMessage === "Username is available"
-                            ? "text-green-500"
-                            : "text-destructive"
-                        }`}
-                      >
-                        {usernameMessage}
+                      </FormControl>
+                      <p className="text-xs text-muted-foreground">
+                        We'll send you a verification code
                       </p>
-                    )}
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="kushchaudharyog@gmail.com" type="email" />
-                    </FormControl>
-                    <p className="text-xs text-muted-foreground">
-                      We'll send you a verification code
-                    </p>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="******" type="password" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Please wait
-                  </>
-                ) : (
-                  "Sign Up"
-                )}
-              </Button>
-            </form>
-          </Form>
-        </CardContent>
-        <CardFooter>
-          <p className="mx-auto text-sm text-muted-foreground">
-            Already a member?{" "}
-            <Link
-              href="/signin"
-              className="font-medium text-primary hover:underline"
-            >
-              Sign in
-            </Link>
-          </p>
-        </CardFooter>
-      </Card>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-black font-semibold">
+                        Password
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder="******"
+                          type="password"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Please wait
+                    </>
+                  ) : (
+                    "Sign Up"
+                  )}
+                </Button>
+              </form>
+            </Form>
+          </CardContent>
+          <CardFooter>
+            <p className="mx-auto text-sm text-neutral-600 font-semibold">
+              Already a member?{" "}
+              <Link href="/signin" className="text-blue-600  hover:underline">
+                Sign in
+              </Link>
+            </p>
+          </CardFooter>
+        </Card>
+      </div>
     </div>
   );
 }

@@ -18,7 +18,7 @@ export default function MessageCardTopBar({
       "border-black bg-neutral-300",
       className
     )}>
-      <div className="flex items-center absolute top-2 left-2 md:px-2 px-1 gap-1">
+      <div className="flex items-center absolute top-2 left-1 gap-1">
         <div className={cn(
           "circle h-4 w-4 rounded-full",
           "bg-white border-[3px] border-black",

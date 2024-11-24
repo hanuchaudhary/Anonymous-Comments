@@ -5,7 +5,7 @@ export async function POST(request: NextRequest) {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string);
     try {
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" })
-        const prompt = "Generate a single string containing three random, unique comments about the user, separated by ||. Tailor the comments to reflect their potential interests, activities, or personality traits based on what you know about them. Ensure each comment is conversational, creative, and distinct. Always generate new comments each time."
+        const prompt = "Generate three short, user-specific messages that: Appreciate the user. Ask a relevant question about the user. Motivate or encourage the user. Format the messages as <message 1> || <message 2> || <message 3>. Keep each message under 10 words."
 
         const { response } = await model.generateContent(prompt);
         const code = response.text();

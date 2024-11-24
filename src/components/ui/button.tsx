@@ -47,7 +47,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
     return (
-      <div className="relative inline-block">
+      <div className="relative inlin-block">
         <motion.div
           whileTap={{ translateX: 4, translateY: 4 }}
           className="relative z-10"

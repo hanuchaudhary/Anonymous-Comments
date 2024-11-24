@@ -84,7 +84,7 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-white dark:bg-neutral-950 relative items-center justify-center px-4 py-12">
+    <div className="flex min-h-screen relative items-center justify-center px-4 py-12">
       <div className="relative w-96 ">
         <Card>
           <CardHeader className="space-y-1">
@@ -106,13 +106,15 @@ export default function SignInPage() {
                   name="identifier"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-black font-semibold">Email or Username</FormLabel>
+                      <FormLabel className="text-black font-semibold">
+                        Email or Username
+                      </FormLabel>
                       <FormControl>
-                          <Input
-                            {...field}
-                            type="text"
-                            placeholder="Enter your email or username"
-                          />
+                        <Input
+                          {...field}
+                          type="text"
+                          placeholder="Enter your email or username"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -123,19 +125,23 @@ export default function SignInPage() {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-black font-semibold">Password</FormLabel>
+                      <FormLabel className="text-black font-semibold">
+                        Password
+                      </FormLabel>
                       <FormControl>
-                          <Input
-                            {...field}
-                            type="password"
-                            placeholder="Enter your password"
-                          />
+                        <Input
+                          {...field}
+                          type="password"
+                          placeholder="Enter your password"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <Button>Signin</Button>
+                <div className="inline-block">
+                  <Button className="">Signin</Button>
+                </div>
               </form>
             </Form>
           </CardContent>
@@ -143,16 +149,16 @@ export default function SignInPage() {
             <div className="text-sm text-muted-foreground">
               <Link
                 href="/forgot-password"
-                className="hover:text-primary font-semibold underline underline-offset-4"
+                className="text-neutral-600 font-semibold underline underline-offset-4"
               >
                 Forgot your password?
               </Link>
             </div>
-            <div className="text-sm text-muted-foreground font-semibold">
+            <div className="text-sm text-neutral-600 font-semibold">
               Don't have an account?{" "}
               <Link
                 href="/signup"
-                className="text-primary hover:underline underline-offset-4"
+                className="text-blue-600 hover:underline underline-offset-4"
               >
                 Sign up
               </Link>

@@ -1,168 +1,89 @@
 "use client";
-
 import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Mail, ChevronRight, MessageSquare, Shield, Users } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Autoplay from "embla-carousel-autoplay";
-import messages from "@/data/messages.json";
-import { motion } from "framer-motion";
+import LandingCard from "@/components/LandingCard";
 
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-
-const features = [
-  {
-    icon: MessageSquare,
-    title: "Anonymous Messaging",
-    description: "Share your thoughts without revealing your identity",
-  },
-  {
-    icon: Shield,
-    title: "Secure & Private",
-    description: "End-to-end encryption for complete privacy",
-  },
-  {
-    icon: Users,
-    title: "Team Friendly",
-    description: "Perfect for teams of any size",
-  },
-];
-
-export default function Home() {
+export default async function Home() {
   return (
-    <div className="flex flex-col pt-20 dark:bg-black bg-white w-full">
-      <main className="flex-grow flex flex-col items-center justify-center px-4 md:px-24 py-12">
-        <motion.section
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-primary">
-            Transform Feedback into Growth
-          </h1>
-          <p className="text-xl md:text-2xl text-black dark:text-purple-100/80 mb-8 leading-relaxed">
-            Create a culture of open communication where everyone feels safe to
-            share their thoughts. Your team's growth starts with honest
-            feedback.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href={"/signin"}>
-              <Button size="lg">
-                Get Started <ChevronRight className="ml-2" />
-              </Button>
-            </Link>
-            <Button size="lg" variant="outline">
-              Watch Demo
-            </Button>
-          </div>
-        </motion.section>
-
-        <motion.div
-          className="grid md:grid-cols-3 gap-8 mb-16 w-full max-w-6xl"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-        >
-          {features.map((feature, index) => (
-            <motion.div key={index} whileHover={{ scale: 1.05 }}>
-              <Card
-                key={index}
-                className="bg-secondary border-white/20 backdrop-blur-sm text-secondary"
-              >
-                <CardHeader>
-                  <feature.icon className="w-12 h-12 mb-4 text-primary" />
-                  <CardTitle className="text-primary">
-                    {feature.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-primary">{feature.description}</p>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        <motion.div
-          className="w-full max-w-6xl mb-16"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.6 }}
-        >
-          <h2 className="text-3xl font-bold text-center mb-8 text-primary">
-            Recent Feedback
-          </h2>
-          <Carousel
-            plugins={[Autoplay({ delay: 3000 })]}
-            opts={{
-              align: "start",
-              loop: true,
-            }}
-            className="w-full"
-          >
-            <CarouselContent>
-              {messages.map((message, index) => (
-                <CarouselItem
-                  key={index}
-                  className="md:basis-1/2 lg:basis-1/3"
-                >
-                  <Card className="bg-secondary border-white/20 backdrop-blur-sm text-primary h-full">
-                    <CardHeader>
-                      <CardTitle className="text-lg flex items-center gap-2">
-                        <Mail className="w-4 h-4" />
-                        {message.title}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="mb-4">{message.content}</p>
-                      <p className="text-xs ">{message.received}</p>
-                    </CardContent>
-                  </Card>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <div className="md:block hidden">
-              <CarouselPrevious />
-              <CarouselNext />
+    <div className="min-h-screen bg-white text-black pt-20">
+      <section className="container mx-auto px-4 py-16">
+        <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2">
+          <div className="space-y-4">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+              Share and Receive
+              <br />
+              Feedback Anonymously
+            </h1>
+            <p className="text-base md:text-lg lg:text-xl">
+              With <span className="font-bold">Anonymous Feedback</span>, you
+              can create a space to receive honest and anonymous feedback from
+              your peers, friends, or followers.
+            </p>
+            <div className="inline-block">
+              <Link href={"/signin"}>
+                <Button className="px-6 py-3 text-base lg:text-lg">
+                  Get Started
+                </Button>
+              </Link>
             </div>
-          </Carousel>
-        </motion.div>
-      </main>
-
-      <footer className="w-full rounded-t-xl shadow-md py-8 px-4 md:px-6 bg-neutral-950 dark:bg-neutral-800 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-purple-100/60">
-            © 2024 TrueFeedback. All rights reserved.
-          </p>
-          <div className="flex gap-8">
-            <Link
-              href="/privacy"
-              className="text-purple-100/60 hover:text-white transition-colors"
-            >
-              Privacy Policy
-            </Link>
-            <Link
-              href="/terms"
-              className="text-purple-100/60 hover:text-white transition-colors"
-            >
-              Terms of Service
-            </Link>
-            <Link
-              href="/contact"
-              className="text-purple-100/60 hover:text-white transition-colors"
-            >
-              Contact
-            </Link>
+          </div>
+          <div className="relative h-64 md:h-80 lg:h-96">
+            <div className="h-full w-full">
+              <img src="/S3.png" alt="" />
+            </div>
           </div>
         </div>
-      </footer>
+      </section>
+
+      <h1 className="font-semibold text-black text-xl md:text-2xl lg:text-3xl pb-20 md:py-10 pl-4 md:pl-10 lg:pl-20">
+        Key Features
+      </h1>
+      <section className="relative bg-neutral-100 w-full border-black border-y-[3px] py-10 md:py-16">
+        <div className="mx-auto max-w-5xl px-4">
+          <h2 className="mb-8 text-2xl md:text-3xl lg:text-4xl font-bold text-center lg:text-left">
+            Platform Highlights
+          </h2>
+          <div className="grid gap-6 md:gap-8 md:grid-cols-2">
+            {[ 
+              {
+                title: "Anonymous Messaging",
+                image: "/S3.png",
+                description:
+                  "Create a feedback space, share your link, and receive anonymous messages seamlessly.",
+              },
+              {
+                title: "Customizable Spaces",
+                image: "/S2.png",
+                description:
+                  "Personalize your feedback space with options to filter and moderate messages.",
+              },
+            ].map((feature, idx) => (
+              <LandingCard key={idx} data={feature} />
+            ))}
+          </div>
+        </div>
+        <section className="absolute md:-top-6 md:left-0 -top-16  px-2 md:px-20 w-full">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 border-black border-[3px]">
+            {[
+              "Anonymous Messaging",
+              "Easy Sharing",
+              "Secure and Private",
+              "AI Support",
+            ].map((link, idx) => (
+              <p
+                key={idx}
+                className={`group flex items-center font-semibold justify-between bg-neutral-200 px-2 md:px-4 py-2 ${
+                  idx === 0 ? "" : "border-l-[3px]"
+                } border-black hover:bg-neutral-300 transition-colors`}
+              >
+                {link}
+                <ArrowUpRight className="h-5 md:h-6 w-5 md:w-6 font-semibold" />
+              </p>
+            ))}
+          </div>
+        </section>
+      </section>
     </div>
   );
 }
